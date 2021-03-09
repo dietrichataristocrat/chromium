@@ -993,18 +993,19 @@ int SSLClientSocketImpl::Init() {
   // Additionally disable HMAC-SHA1 ciphers in ECDSA. These are the remaining
   // CBC-mode ECDSA ciphers.
   std::string command("ALL:!SHA256:!SHA384:!aPSK:!ECDSA+SHA1");
+  // std::string command("ALL:!SHA256:!SHA384:!aPSK:!ECDSA+SHA1");
 
-  if (ssl_config_.require_ecdhe)
-    command.append(":!kRSA");
+  // if (ssl_config_.require_ecdhe)
+  //   command.append(":!kRSA");
 
-  // Remove any disabled ciphers.
-  for (uint16_t id : ssl_config_.disabled_cipher_suites) {
-    const SSL_CIPHER* cipher = SSL_get_cipher_by_value(id);
-    if (cipher) {
-      command.append(":!");
-      command.append(SSL_CIPHER_get_name(cipher));
-    }
-  }
+  // // Remove any disabled ciphers.
+  // for (uint16_t id : ssl_config_.disabled_cipher_suites) {
+  //   const SSL_CIPHER* cipher = SSL_get_cipher_by_value(id);
+  //   if (cipher) {
+  //     command.append(":!");
+  //     command.append(SSL_CIPHER_get_name(cipher));
+  //   }
+  // }
 
   if (!SSL_set_strict_cipher_list(ssl_.get(), command.c_str())) {
     LOG(ERROR) << "SSL_set_cipher_list('" << command << "') failed";
